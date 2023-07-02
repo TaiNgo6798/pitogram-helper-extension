@@ -13,10 +13,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "extractCookies") {
     try {
       const domain = "instagram.com";
+      let cookieString = "";
       chrome.cookies.getAll({ domain }, (res) => {
         for (cookie of res) {
-          setCookie("https://pitogram.vercel.app", cookie.name, cookie.value);
+          cookieString += `${cookie.name}=${cookie.value};`;
         }
+        sendResponse(cookieString);
       });
     } catch (err) {
       sendResponse({ success: false, err: err.message });
@@ -28,15 +30,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // Function to handle tab update events
 function handleTabUpdate(tabId, changeInfo, tab) {
-  if (
-    changeInfo.status === "complete" &&
-    tab.url.startsWith("https://pitogram.vercel.app")
-  ) {
+  const shouldSetCookie =
+    tab.url.startsWith("https://pitogram.vercel.app") ||
+    tab.url.startsWith("http://localhost:3000");
+  if (changeInfo.status === "complete" && shouldSetCookie) {
     try {
       const domain = "instagram.com";
       chrome.cookies.getAll({ domain }, (res) => {
         for (cookie of res) {
           setCookie("https://pitogram.vercel.app", cookie.name, cookie.value);
+          setCookie("http://localhost:3000", cookie.name, cookie.value);
         }
       });
     } catch (err) {}

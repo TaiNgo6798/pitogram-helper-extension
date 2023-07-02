@@ -12,8 +12,9 @@ function logToCurrentTab(message) {
   });
 }
 
-// Button click event listener
-// document.getElementById("getCookies").addEventListener("click", function () {
-//   logToCurrentTab("start cron insta cookie...");
-//   chrome.runtime.sendMessage({ action: "extractCookies" });
-// });
+//Button click event listener
+document.getElementById("getCookies").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "extractCookies" }, (cookieString) => {
+    document.getElementById("cookieString").value = cookieString;
+  });
+});
