@@ -30,16 +30,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 // Function to handle tab update events
 function handleTabUpdate(tabId, changeInfo, tab) {
-  const shouldSetCookie =
-    tab.url.startsWith("https://pitogram.vercel.app") ||
-    tab.url.startsWith("http://localhost:3000");
+  const domains = [
+    "https://pitogram.vercel.app",
+    "http://localhost:3000",
+    "https://pitogram.io.vn",
+    "http://pitogram.io.vn",
+  ]
+  const shouldSetCookie = domains.some((domain) => tab.url.includes(domain));
+
   if (changeInfo.status === "complete" && shouldSetCookie) {
     try {
       const domain = "instagram.com";
       chrome.cookies.getAll({ domain }, (res) => {
         for (cookie of res) {
-          setCookie("https://pitogram.vercel.app", cookie.name, cookie.value);
-          setCookie("http://localhost:3000", cookie.name, cookie.value);
+          domains.forEach((domain) => {
+            setCookie(domain, cookie.name, cookie.value);
+          });
         }
       });
     } catch (err) {}
