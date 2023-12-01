@@ -16,6 +16,6 @@
     "*://*.instagram.com/",
     "*://*.pitogram.vercel.app/",
     "http://localhost/*",
-    "*://*.pitogram.*/"
+    "*://*.pitogram.io.vn/"
   ]
 }
