@@ -40,11 +40,10 @@ function handleTabUpdate(tabId, changeInfo, tab) {
 
   if (changeInfo.status === "complete" && shouldSetCookie) {
     try {
-      const domain = "instagram.com";
-      chrome.cookies.getAll({ domain }, (res) => {
+      chrome.cookies.getAll({ domain: "instagram.com" }, (res) => {
         for (cookie of res) {
-          domains.forEach((domain) => {
-            setCookie(domain, cookie.name, cookie.value);
+          domains.forEach((v) => {
+            setCookie(v, cookie.name, cookie.value);
           });
         }
       });
